@@ -8,7 +8,7 @@ class GiftWheelGame:
         self.current_player = None #ผู้เล่นปัจจุบัน
         self.results = {} #ผลลัพธ์ของผู้เล่นแต่ละคน เช่น (ผู้เล่นAได้รับของขวัญของB)
         self.started = False #สถานะการเริ่มเกม
-        self.frist = True #สถานะการหมุนครั้งแรก
+        self.first = True #สถานะการหมุนครั้งแรก
     # --------------------------------------------------------------------------------------------
     # add player to the game
     # เพิ่มผู้เล่นเข้าสู่เกม
@@ -42,17 +42,18 @@ class GiftWheelGame:
         # check len of players
         # ตรวจสอบจำนวนผู้เล่น
         if len(self.players) < 2:
-            return ValueError("Need at least 2 players to start the game. ต้องมีผู้เล่นอย่างน้อย 2 คนเพื่อเริ่มเกม")
+            raise ValueError("Need at least 2 players to start the game. ต้องมีผู้เล่นอย่างน้อย 2 คนเพื่อเริ่มเกม")
 
         # check if first player is in players list
         # ตรวจสอบว่าผู้เล่นคนแรกอยู่ในรายชื่อผู้เล่นหรือไม่
         if first_player not in self.players:
-            return ValueError("First player must be in the players list. ผู้เล่นคนแรกต้องอยู่ในรายชื่อผู้เล่น")
+            raise ValueError("First player must be in the players list. ผู้เล่นคนแรกต้องอยู่ในรายชื่อผู้เล่น")
         
         # set results dict and started status
         # ตั้งค่าผลลัพธ์และสถานะการเริ่มเกม
         self.results = {}
         self.started = True
+        self.first = True
         self.current_player = first_player
 
         #  randomize the wheel excluding the first player
@@ -82,10 +83,8 @@ class GiftWheelGame:
         # update the wheel
         # อัปเดตวงล้อ
         if self.first:
-            self.players.append(self.current_player)
+            self.wheel.append(self.current_player)
             self.first = False
-        else:
-            self.wheel.remove(target)
         # new player turn
         # เปลี่ยนผู้เล่น
         self.current_player = target
@@ -97,14 +96,17 @@ class GiftWheelGame:
     # ตรวจสอบว่าเกมจบหรือไม่
     # --------------------------------------------------------------------------------------------
     def game_is_finished(self):
-        pass
+        return len(self.wheel) == 0
 
     # --------------------------------------------------------------------------------------------
     # result of the game
     # ผลลัพธ์ของเกม
     # --------------------------------------------------------------------------------------------
     def get_results(self):
-        pass
+        if not self.game_is_finished():
+            raise RuntimeError("game is not finished yet. เกมยังไม่จบ")
+        
+        return self.results.copy()
 
     # --------------------------------------------------------------------------------------------
     # reset the game
