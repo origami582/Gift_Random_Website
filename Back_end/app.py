@@ -8,7 +8,7 @@ class GiftWheelGame:
         self.current_player = None #ผู้เล่นปัจจุบัน
         self.results = {} #ผลลัพธ์ของผู้เล่นแต่ละคน เช่น (ผู้เล่นAได้รับของขวัญของB)
         self.started = False #สถานะการเริ่มเกม
-
+        self.frist = True #สถานะการหมุนครั้งแรก
     # --------------------------------------------------------------------------------------------
     # add player to the game
     # เพิ่มผู้เล่นเข้าสู่เกม
@@ -64,7 +64,33 @@ class GiftWheelGame:
     # หมุนวงล้อสำหรับผู้เล่นปัจจุบัน
     # --------------------------------------------------------------------------------------------
     def spin_wheel(self):
-        pass
+        if not self.started:
+            raise RuntimeError("game has not started yet. เกมยังไม่เริ่ม")
+        
+        if not self.wheel:
+            raise RuntimeError("game is already finished. เกมจบแล้ว")
+        
+        # choose a randow target from the wheel
+        # เลือกของขวัญแบบสุ่มจากวงล้อ
+        target = random.choice(self.wheel)
+
+        # record the result and remove the target from the wheel
+        # บันทึกผลลัพธ์และลบของขวัญที่ได้รับออกจากวงล้อ
+        self.results[self.current_player] = target
+
+        self.wheel.remove(target)
+        # update the wheel
+        # อัปเดตวงล้อ
+        if self.first:
+            self.players.append(self.current_player)
+            self.first = False
+        else:
+            self.wheel.remove(target)
+        # new player turn
+        # เปลี่ยนผู้เล่น
+        self.current_player = target
+
+        return target
 
     # --------------------------------------------------------------------------------------------
     # chack the game this ended or not
