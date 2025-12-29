@@ -32,8 +32,32 @@ class GiftWheelGame:
     # start the game
     # เริ่มเกม
     # --------------------------------------------------------------------------------------------
-    def start_game(self):
-        pass
+    
+    def start_game(self, first_player):
+        # if game started, cannot start again
+        # ถ้าเกมเริ่มแล้วจะไม่สามารถเริ่มใหม่ได้
+        if self.started:
+            raise ValueError("Game has already started. เกมได้เริ่มแล้ว")
+
+        # check len of players
+        # ตรวจสอบจำนวนผู้เล่น
+        if len(self.players) < 2:
+            return ValueError("Need at least 2 players to start the game. ต้องมีผู้เล่นอย่างน้อย 2 คนเพื่อเริ่มเกม")
+
+        # check if first player is in players list
+        # ตรวจสอบว่าผู้เล่นคนแรกอยู่ในรายชื่อผู้เล่นหรือไม่
+        if first_player not in self.players:
+            return ValueError("First player must be in the players list. ผู้เล่นคนแรกต้องอยู่ในรายชื่อผู้เล่น")
+        
+        # set results dict and started status
+        # ตั้งค่าผลลัพธ์และสถานะการเริ่มเกม
+        self.results = {}
+        self.started = True
+        self.current_player = first_player
+
+        #  randomize the wheel excluding the first player
+        # สุ่มวงล้อโดยไม่รวมผู้เล่นคนแรก
+        self.wheel = [player for player in self.players if player != first_player]
 
     # --------------------------------------------------------------------------------------------
     # spin the wheel for the current player
