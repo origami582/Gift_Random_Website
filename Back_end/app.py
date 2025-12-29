@@ -15,7 +15,18 @@ class GiftWheelGame:
     # --------------------------------------------------------------------------------------------
 
     def add_player(self, player_name):
-        pass
+        # if game started, cannot add player
+        # ถ้าเกมเริ่มแล้วจะไม่สามารถเพิ่มผู้เล่นได้
+        if self.started:
+            return False
+        
+        # add player and check duplicate
+        # เพิ่มผู้เล่นและตรวจสอบการซ้ำกัน
+        if player_name and player_name not in self.players:
+            self.players.append(player_name)
+            return True
+        
+        return False
 
     # --------------------------------------------------------------------------------------------
     # start the game
